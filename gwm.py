@@ -7,7 +7,7 @@ def main():
     print("start of main()")
 
     # open file
-    # f = open("textfile.txt","w+")
+    # f = open("textfile.txt", "w+")
     f = open("test.txt", "r")
 
     # # write some lines of data to the file
