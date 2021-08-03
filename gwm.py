@@ -8,7 +8,7 @@ def main():
 
     # open file
     # f = open("textfile.txt","w+")
-    f = open("textfile.txt", "r")
+    f = open("test.txt", "r")
 
     # # write some lines of data to the file
     # for i in range(10):
