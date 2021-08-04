@@ -1,6 +1,7 @@
 #
 # read evernote mtl export html file
-#
+# todo
+# make it work, it doesn't read anything, just a copy of pocket prog
 
 # import the HTMLParser module
 from html.parser import HTMLParser
