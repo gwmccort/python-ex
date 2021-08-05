@@ -5,12 +5,16 @@
 # import the HTMLParser module
 from html.parser import HTMLParser
 
-# globals
+# globals TODO: do i need these?
 tags = set()  # set of tags
 links = {}  # dict of links & tags
 # class PocketEntry():
 #     __link
 #     __tags
+
+#
+# pocket bookmark entry
+#
 
 
 class PocketEntry():
@@ -40,6 +44,7 @@ class PocketExportParser(HTMLParser):
     def getentries():
         return PocketExportParser.entries
 
+    @staticmethod
     def gettags(self):
         return tags
 
@@ -60,16 +65,27 @@ class PocketExportParser(HTMLParser):
                     # lnk = a[1]
                     # links[lnk] = {}
                     entry.link = a[1]
-                    self.entries.append(entry)
+                    # self.entries.append(entry)
 
                 # print(entry)
 
                 # find tags
                 if (a[0] == "tags"):
                     ts = a[1]
+
+                    # add to entry
+                    entry.tags = ts
+
+                    # TODO: is this needed?
+                    self.entries.append(entry)
+
+                    # add separate tag to class set
                     if ts:
                         for t in ts.split(","):
                             self.tags.add(t)
+
+                if entry.link is not None:
+                    self.entries.append(entry)
 
 
 def main():
