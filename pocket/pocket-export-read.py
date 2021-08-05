@@ -95,12 +95,14 @@ def main():
     parser = PocketExportParser()
 
     # open the sample HTML file and read it
-    f = open("pocket-export.html")
+    f = open("data/pocket-export.html")
     if f.mode == "r":
         contents = f.read()  # read the entire file
         parser.feed(contents)
 
     f.close()
+
+    exit
 
     # # TODO: fix class visibility of entries
     # for e in parser.entries:

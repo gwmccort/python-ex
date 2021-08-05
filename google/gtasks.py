@@ -4,6 +4,7 @@
 
 import json
 
+
 def printResults(data):
     theJSON = json.loads(data)
 
@@ -20,17 +21,20 @@ def printResults(data):
                 # print(tl["items"])
                 for i in tl["items"]:
                     if (i["status"] != "completed"):
-                        print("\ttitle: " + i["title"] + " status: " + i["status"])
+                        print("\ttitle: " + i["title"] +
+                              " status: " + i["status"])
 
-def main(): 
-        
+
+def main():
+
     # open the sample HTML file and read it
-    f = open("Google-Tasks.json")
+    f = open("data/Google-Tasks.json")
     if f.mode == "r":
-        contents = f.read() # read the entire file
+        contents = f.read()  # read the entire file
         printResults(contents)
-    
+
     f.close()
 
+
 if __name__ == "__main__":
-  main();
+    main()
