@@ -49,7 +49,7 @@ def main():
     parser = MyHTMLParser()
 
     # open the sample HTML file and read it
-    f = open("evernote-inbox.mht")
+    f = open("data/evernote-inbox.mht")
     if f.mode == "r":
         contents = f.read()  # read the entire file
         parser.feed(contents)
