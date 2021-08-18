@@ -34,6 +34,8 @@ class PocketEntry():
 
 class PocketExportParser(HTMLParser):
 
+    name = "glen"
+
     # all unique tags
     tags = set()
 
@@ -89,10 +91,11 @@ class PocketExportParser(HTMLParser):
 
 
 def main():
-    global tags
+    # global tags
 
     # instantiate the parser and feed it some HTML
     parser = PocketExportParser()
+    print(parser.name)
 
     # open the sample HTML file and read it
     f = open("data/pocket-export.html")
