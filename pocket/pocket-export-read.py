@@ -34,7 +34,7 @@ class PocketEntry():
 
 class PocketExportParser(HTMLParser):
 
-    name = "glen"
+    name = "PocketExportParser"
 
     # all unique tags
     tags = set()
@@ -97,32 +97,35 @@ def main():
     parser = PocketExportParser()
     print(parser.name)
 
-    # open the sample HTML file and read it
+    # open the pocket export HTML file and read it
     f = open("data/pocket-export.html")
     if f.mode == "r":
         contents = f.read()  # read the entire file
         parser.feed(contents)
-
     f.close()
-
-    exit
 
     # # TODO: fix class visibility of entries
     # for e in parser.entries:
     #     print(e.link)
 
+    # write links to file
+    lf = open("data/pocket-links.txt", "w")
     entries = PocketExportParser.getentries()
     for e in entries:
-        print(e.link)
+        lf.write(e.link + "\n")
+    lf.close()
 
     # print(parser.entries)
 
     # print(links)
 
+    # write tags to file
     # TODO: use method, don't just get class data
-    for t in PocketExportParser.tags:
-        print(t)
+    tf = open("data/pocket-tags.txt", "w")
+    for t in sorted(PocketExportParser.tags):
+        tf.write(t + "\n")
     # print(sorted(tags))
+    tf.close()
 
     print("end of main")
 
