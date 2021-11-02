@@ -29,7 +29,7 @@ class PocketEntry():
     def __init__(self, link, tags):
         self.link = link
 
-# create a subclass of HTMLParser and override the handler methods
+# subclass of HTMLParser and override the handler methods
 
 
 class PocketExportParser(HTMLParser):
