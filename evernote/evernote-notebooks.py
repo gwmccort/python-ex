@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+############################################################
 # parse evernote saved mhtml file and extract notebook list.
 # Uses regurlar expressions
 # TODO:
@@ -5,10 +7,33 @@
 ############################################################
 
 import re
+import argparse
+
+default_file = 'data/evernote-notebooks.mhtml'
+
+# pare arguments
+parser = argparse.ArgumentParser(
+    description='Find Evernote notebooks from mhtml file')
+parser.add_argument('-f', '--file', type=str, help='file to parse',
+                    default=default_file)
+parser.add_argument('--bar', nargs='+',
+                    help='one of the bars to be frobbled')
+# parser.add_argument('--sum', dest='accumulate', action='store_const',
+#                     const=sum, default=max,
+#                     help='sum the integers (default: find the max)')
+
+args = parser.parse_args()
 
 print("Start...")
 
-with open('data/evernote-notebooks.mhtml', 'rt') as myfile:
+# set input file
+# if args.file:
+#     infile = args.file
+# else:
+#     infile = 'data/evernote-notebooks.mhtml'
+infile = args.file
+
+with open(infile, 'rt') as myfile:
     linenum = 0
     pattern = ".*NOTEBOOK_TITLE\">(.*)</span>.*"
 
