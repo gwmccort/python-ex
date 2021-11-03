@@ -1,6 +1,6 @@
-#
 # read google bookmarks export html file
-#
+# using HTMLParser extension.
+#########################################
 
 # import the HTMLParser module
 # from html import parser
