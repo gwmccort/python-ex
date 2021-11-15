@@ -1,5 +1,8 @@
 # XML examples
-* LinkedInLearning - Python: XML, JSON, and the Web examples
+
+* cdata.py - use etree to get CDATA
 * smiley.svg - XML examples
-* xml.py 
-* xml2.py 
+* LinkedInLearning
+** XML, JSON, and the Web examples | 
+* xml.py - NOTHING
+* xml2.py - NOT WORKING
