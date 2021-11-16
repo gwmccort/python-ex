@@ -4,7 +4,7 @@ Just some play pythons projects
 ## t2d
 - [ ] read music playlist
 - [X] one more that is done
-- [] delete not-working-xml after compare w/ xml
+- [ ] delete not-working-xml after compare w/ xml
 ## Files/Dirs
 * evernote - evernote export
     * evernote-mht.py - just a shell, should read a evernote save file mhtl
