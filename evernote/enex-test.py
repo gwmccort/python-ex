@@ -75,27 +75,14 @@ def main():
 
     if (infile is None):
         # use string for xml input
-        # enexParser.parse(testXml)
-        # enexParser.parseString(testXml)
-        # enexParser.set input to a string
-
-        # TODO: just hardcoded file, change to string
-        enexParser.parse("data/evernote-inbox.enex")
+        xml.sax.parseString(testXml, handler)
     else:
+        # read file for xml input
         enexParser.parse(infile)
-        # xml.sax.parse(infile, handler)
 
     # print all note titles
     for note in handler.notes:
         print(note)
-
-    # if (infile is None):
-    #     # use a string for xml input
-    #     xml.sax.parseString(testXml, handler)
-    #     # xml.sax.parse(testXml, handler) #TODO: can i just use parse????
-    # else:
-    #     # use given file as xml input
-    #     xml.sax.parse(infile, handler)
 
 
 ############
@@ -105,15 +92,24 @@ testXml = """<?xml version="1.0" encoding="UTF-8"?>
 <en-export export-date="20211204T204723Z" application="Evernote" version="10.24.3">
     <note>
         <title>&quot;O Death&quot; Traditional Banjo Lesson</title>
+        <content>
+            <![CDATA[some banjo tabs]]>
+    </content>
     </note>
     <note>
         <title>Accessing a Server through Relay | Plex Support</title>
+        <content>
+             <![CDATA[<p class='basicCardFront'>Excuse me.</p>]]>
+        </content>
+    </note>
+     <note>
+        <title>Last title in test enex</title>
+        <content>
+             <![CDATA[cdata for last title]]>
+        </content>
     </note>
 </en-export>
 """
-
-#   <![CDATA[<p class='basicCardFront'>Excuse me.</p>]]>
-
 
 if __name__ == "__main__":
     main()
