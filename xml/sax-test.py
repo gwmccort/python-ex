@@ -4,32 +4,83 @@
 ##########################
 
 # from io import StringIO
-# import argparse
+import argparse
 import xml.sax
+import pprint
+
+infile = None
+default_infile = "data/sample.xml"
 
 
 class SaxHandler(xml.sax.ContentHandler):
 
+    # list of notes in enex file
+    notes = []
+    noteTitle = ""
+
     def __init__(self):
-        self.noteCount = 0
-        self.isInNote = False
+        # init instance vars
         self.isInTitle = False
 
     # Handle startElement
     def startElement(self, tagName, attrs):
-        print("StartTag:" + tagName)
+        # print("StartTag:" + tagName)
+
+        if tagName == "title":
+            # print("Title:" + tagName)
+            self.isInTitle = True
+            self.noteTitle = ""
 
     # Handle endElement
     def endElement(self, tagName):
-        print("EndTag:" + tagName)
+        # print("EndTag:" + tagName)
+
+        if tagName == "title":
+            # print("endElement: setting isInTitle to False")
+            self.isInTitle = False
+            self.notes.append(self.noteTitle)
+            print(self.noteTitle)  # TODO: add to a list & getter
+
+    # Handle text data
+
+    def characters(self, chars):
+        # print("in characters()")
+        if self.isInTitle:
+            # print("Note text: " + chars)
+            self.noteTitle += chars
+
+
+def parseArgs():
+    print("in parseArgs")
+
+    global infile
+
+    # parse args
+    argParser = argparse.ArgumentParser(
+        description='xml file parser with sax')
+    argParser.add_argument('-f', '--file', type=str, help='file to parse')
+    args = argParser.parse_args()
+
+    # set input file if on command line
+    if (args.file is not None):
+        print("setting infile to arg")
+        infile = args.file
 
 
 def main():
     print("Start(main)...")
 
+    parseArgs()
+
     # create a new content handler for the SAX parser
     handler = SaxHandler()
-    xml.sax.parseString(testXml, handler)
+    if (infile is None):
+        # use a string for xml input
+        xml.sax.parseString(testXml, handler)
+        # xml.sax.parse(testXml, handler) #TODO: can i just use parse????
+    else:
+        # use given file as xml input
+        xml.sax.parse(infile, handler)
 
     print("End: main()")
 

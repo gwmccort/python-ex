@@ -23,10 +23,10 @@ testXml = """<?xml version="1.0" encoding="UTF-8"?>
 default_infile = "data/evernote-inbox.enex"
 
 
-# class EnexLexHandler(xml.sax.LexicalHandler):
-#     # handle cdata
-#     def startCDATA(self):
-#         print("startCDATA")
+class EnexLexHandler(xml.sax.handler.LexicalHandler):
+    # handle cdata
+    def startCDATA(self):
+        print("startCDATA")
 
 
 class EnexContentHandler(xml.sax.ContentHandler):
@@ -90,7 +90,7 @@ def main():
     xmlParser = xml.sax.make_parser()
     xmlHandler = EnexContentHandler()
     xmlParser.setContentHandler(xmlHandler)
-    xmlParser.parse("data/evernote-inbox.enex")
+    xmlParser.pars
 
 
 if __name__ == "__main__":
