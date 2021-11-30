@@ -5,6 +5,7 @@
 
 ## Python programs for evernote
 
+* bs-enex.py - parse enex file with beautiful soup
 * main-re.py - example of making a py file a shell script
 * evernote-find.py - get list of notebooks using find, not regexp
 * evernote-mht-NOT-WORKING.py

@@ -20,10 +20,6 @@ class EnexSaxHandler(xml.sax.ContentHandler):
     notes = []
     noteTitle = ""
 
-    def __init__(self):
-        # init instance vars
-        self.isInTitle = False
-
     # Handle startElement
     def startElement(self, tagName, attrs):
         # print("StartTag:" + tagName)
@@ -48,6 +44,10 @@ class EnexSaxHandler(xml.sax.ContentHandler):
         if self.isInTitle:
             # print("Note text: " + chars)
             self.noteTitle += chars
+
+    def __init__(self):
+        # init instance vars
+        self.isInTitle = False
 
 
 def parseArgs():

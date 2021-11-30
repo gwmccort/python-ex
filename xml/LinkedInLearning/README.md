@@ -4,3 +4,6 @@
 * gwm-sax.py - parse xml from a string
 * request.py - process a http request
 * sax-parser.py - simple sax parser example
+
+## Documentation
+* [xml.dom.minidom](https://docs.python.org/3/library/xml.dom.minidom.html)
