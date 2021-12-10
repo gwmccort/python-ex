@@ -11,6 +11,9 @@ Just some play pythons projects
 * google
     * gmarks-html.py - read goole bookmarks export html file
     * gtasks.py - read google tasks export file
+* io - io examples
+    * 2files.py - read & write 2 files at a time with statement
+* jupyter - jupyter notebook examples
 * oop - object orineated programming with python
 * playlist-m3u-parser - music playlists utils
 * pocket
