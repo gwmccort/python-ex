@@ -2,6 +2,7 @@
 Just some play pythons projects
 
 ## t2d
+- [ ] clean up git
 - [ ] read music playlist
 - [X] one more that is done
 - [ ] delete not-working-xml after compare w/ xml
