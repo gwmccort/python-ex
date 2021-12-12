@@ -1,2 +1,3 @@
-**/ExerciseFiles/**
+/ExerciseFilesNoGIT/**
 *.zip
+**/.ipynb*/**
