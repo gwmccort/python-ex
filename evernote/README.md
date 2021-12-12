@@ -5,6 +5,7 @@
 
 ## Python programs for evernote
 
+* notebooks-mthml - get notebooks by reading a saved evernote notebooks web page
 * bs-enex.py - parse enex file with beautiful soup
 * lxml-enex.py - use dom to get titles
 * main-re.py - example of making a py file a shell script
