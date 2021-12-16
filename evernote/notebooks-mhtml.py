@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+###############################################################
 # extract mime encoded multi-part mhtml
 # from: https://tewarid.github.io/2019/06/04/extract-all-tabular-data-from-multipart-mime-documents.html
 #

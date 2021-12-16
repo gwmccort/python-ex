@@ -1,4 +1,5 @@
 **/data
+**/Ex_Files_*/**
 *.zip
 .ipynb*/**
 
