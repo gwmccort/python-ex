@@ -17,6 +17,7 @@ Just some play pythons projects
 * jupyter - jupyter notebook examples
 * oop - object orineated programming with python
 * playlist-m3u-parser - music playlists utils
+* pandas - slice & dice data
 * pocket
     * pocket-export-read.py - read pocket export file
 * xml - xml parsing examples
