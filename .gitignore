@@ -2,5 +2,4 @@
 **/Ex_Files_*/**
 *.zip
 .ipynb*/**
-
-
+**/my-directory-list.txt
