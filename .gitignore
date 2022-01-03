@@ -1,5 +1,5 @@
 **/data
-**/Ex_Files_*/**
+**/Ex_Files*/**
 *.zip
 .ipynb*/**
 **/my-directory-list.txt
