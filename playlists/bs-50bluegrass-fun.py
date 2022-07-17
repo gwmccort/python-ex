@@ -1,4 +1,4 @@
-''' read top 50 bluegrass songs from rootsmusicreport.com '''
+''' read top 50 bluegrass songs from RMS rootsmusicreport.com '''
 
 # %%
 import requests
