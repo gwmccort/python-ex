@@ -2,4 +2,6 @@
 **/Ex_Files*/**
 *.zip
 .ipynb*/**
+x.*py*
 **/my-directory-list.txt
+pandas/x.ipynb

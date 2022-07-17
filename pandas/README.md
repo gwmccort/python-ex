@@ -2,5 +2,6 @@
 
 ## Files/Dirs
 * lil: [Pandas Essential Training](https://www.linkedin.com/learning/pandas-essential-training)
-* [This is an external link to genome.gov](https://www.genome.gov/)
+* [Pandas in Action ](https://www.manning.com/books/pandas-in-action)
+    * my files>Training>Pandas-in-action.pdf
 
