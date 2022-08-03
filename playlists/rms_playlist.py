@@ -71,9 +71,17 @@ def parse_html(html):
 
 def merge_latest(url, fname):
     ''' merge latest chart with saved data '''
-    new_df = parse_html(read_url(BG_SONGS_URL))
-    old_df = pd.read_csv(BG_SONG_CSV_FILE)
+    new_df = parse_html(read_url(url))
+    old_df = pd.read_csv(fname)
     m_df = merge_frames(old_df, new_df)
 
     # save merged df
     m_df.to_csv(BG_SONG_CSV_FILE, index=False)
+
+
+def main():
+    merge_latest(BG_SONGS_URL, BG_SONG_CSV_FILE)
+
+
+if __name__ == "__main__":
+    main()
