@@ -52,30 +52,26 @@ class RmsPlaylist(Playlist):
         df = pd.DataFrame(columns=['Song', 'Artist'])
 
         page = requests.get(self.URL)
-        print(f'page ok:{page.ok}, status:{page.status_code}')
+        # print(f'page ok:{page.ok}, status:{page.status_code}')
 
         soup = BeautifulSoup(page.content, 'html.parser')
         # print(soup.head.title.text)  # print page title
 
         # read top 50 songs table
-        tbl = soup.find('table')
-        rows = tbl.find_all('tr')
-        skip = True
-        for row in rows:
-            # skip first row (header)
-            if skip:
-                skip = False
-            else:
-                # create a list of songs from table & remove white space
-                cols = row.find_all('td')
-                cols = [x.text.strip() for x in cols]
+        rows = soup.find('table').find_all('tr')
 
-                # remove unwanted columns
-                del cols[0:3]
-                del cols[2]
+        # skip first row (header)
+        for row in rows[1:]:
+            # create a list of songs from table & remove white space
+            cols = row.find_all('td')
+            cols = [x.text.strip() for x in cols]
 
-                # append to dataframe
-                df.loc[len(df)] = cols
+            # remove unwanted columns
+            del cols[0:3]
+            del cols[2]
+
+            # append to dataframe
+            df.loc[len(df)] = cols
 
         self._playlist = df
         return df
@@ -91,10 +87,6 @@ class BgtPlaylist(Playlist):
     CSV_FILE = 'data/bgt_playlist.csv'
 
     def read(self):
-        # print(f'RmsPlaylist.read url: {BGT_URL}')
-        # return pd.DataFrame()
-
-        # blank datafram
         df = pd.DataFrame(columns=['Song', 'Artist'])
 
         # get url data
