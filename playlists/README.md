@@ -14,3 +14,7 @@ parse a m3u music playlist
 ## Files
 - m3u.py - idk
 - bs-50bluegrass.py - read text of top 50 bluegrass songs
+- grotto-25-bg-songs.py - music grotto 25 bluegrass songs
+pandas-html-tbl.py - use pandas to read html table
+apple-mhtml.py - read apple music saved page (mhtml)
+Playlist.py - read playlist fromroots music or bluegrass today

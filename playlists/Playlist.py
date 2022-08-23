@@ -50,12 +50,8 @@ class RmsPlaylist(Playlist):
 
     def read(self):
         df = pd.DataFrame(columns=['Song', 'Artist'])
-
         page = requests.get(self.URL)
-        # print(f'page ok:{page.ok}, status:{page.status_code}')
-
         soup = BeautifulSoup(page.content, 'html.parser')
-        # print(soup.head.title.text)  # print page title
 
         # read top 50 songs table
         rows = soup.find('table').find_all('tr')
@@ -117,11 +113,21 @@ class BgtPlaylist(Playlist):
 
 
 # %%
+''' read Roots Music Service '''
+pl = RmsPlaylist()
+df = pl.read()
+
+# %%
 ''' update rms_playlist.csv with latest from Roots Music Service '''
 pl = RmsPlaylist()
 df = pl.read()
 pl.merge()
 pl.write()
+
+# %%
+''' read Bluegrass Today '''
+pl = BgtPlaylist()
+df = pl.read()
 
 # %%
 ''' update bgt_playlists.csv with latest from Bluegrass Today '''
