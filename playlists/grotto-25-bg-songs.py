@@ -26,7 +26,6 @@ class MusicGrottoParser(HTMLParser):
 
             # use unicode for - char
             rex = r"^(\d+)\) (.*) \u2013 (.*)"
-
             m = re.search(rex, data)
             if m != None:
                 # print(m.groups())

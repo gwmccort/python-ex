@@ -1,6 +1,7 @@
 ''' class to implement playlist'''
 
 # %%
+import re
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -112,13 +113,77 @@ class BgtPlaylist(Playlist):
         Playlist.__init__(self)
 
 
+class GooglePlaylist(Playlist):
+    ''' google music search playlist '''
+    # best bluegrass
+    URL = "https://www.google.com/search?q=best+all+time+bluegrass+songs"
+    FILE = "data/Best Bluegrass.csv"
+
+    # best jam bands
+    # URL = "https://www.google.com/search?q=best+jam+band+songs"
+    # FILE = "data/Best Jam Band.csv"
+
+    def read(self):
+        page = requests.get(self.URL)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        songs = pd.DataFrame(columns=['Song', 'Artist'])
+
+        entries = soup.find_all('div', {'class': 'X7NTVe'})
+        for entry in entries:
+            song = entry.find('h3').text
+            artist = entry.find(
+                'div', {'class': 'BNeawe tAd8D AP7Wnd'}
+            ).text
+            artist = re.sub(r'\d*$', '', artist)
+            songs.loc[len(songs)] = [song, artist]
+
+        self._playlist = songs
+        return songs
+
+
+class ApplePlaylist(Playlist):
+    # bluegrass best known songs
+    # URL = "https://music.apple.com/us/playlist/bluegrass-jukebox-best-known-songs/pl.1bae268778d14d18a3951362e7e059a5"
+    # FILE = 'data/apple-best-bluegrass.csv'
+
+    # classic rock
+    URL = "https://music.apple.com/us/playlist/classic-rock-essentials/pl.1a7fd42205674dd282d106f533f4bea6"
+    FILE = 'data/apple-classic-rock.csv'
+
+    def read(self):
+        page = requests.get(self.URL)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        songs = pd.DataFrame(columns=['Song', 'Artist'])
+
+        entries = soup.find_all(
+            'div', {'class': "songs-list__col songs-list__col--song typography-body"})
+
+        for e in entries:
+            song = e.find('div', {'class': "songs-list-row__song-name"}).text
+            artist = e.find(
+                'div', {'class': "songs-list-row__by-line"}).find('span').text
+            # remove blanks & new lines
+            artist = " ".join(artist.split()).strip()
+
+            # append to dataframe
+            songs.loc[len(songs)] = [song, artist]
+
+        self._playlist = songs
+        return songs
+
+
+# %%
+''' read Google Search'''
+pl = GooglePlaylist()
+df = pl.read()
+
 # %%
 ''' read Roots Music Service '''
 pl = RmsPlaylist()
 df = pl.read()
 
 # %%
-''' update rms_playlist.csv with latest from Roots Music Service '''
+''' update rms_playlist.csv with latest from Roots Music Service (weekly) '''
 pl = RmsPlaylist()
 df = pl.read()
 pl.merge()
@@ -130,7 +195,7 @@ pl = BgtPlaylist()
 df = pl.read()
 
 # %%
-''' update bgt_playlists.csv with latest from Bluegrass Today '''
+''' update bgt_playlists.csv with latest from Bluegrass Today (monthly) '''
 pl = BgtPlaylist()
 df = pl.read()
 pl.merge()
