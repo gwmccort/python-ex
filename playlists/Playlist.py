@@ -1,9 +1,11 @@
-''' class to implement playlist'''
+''' class to implement playlist '''
+# T2D: get old rms playlist
 
 # %%
-import re
-import requests
+# import re
+
 import pandas as pd
+import requests
 from bs4 import BeautifulSoup
 
 
@@ -46,6 +48,12 @@ class Playlist:
 class RmsPlaylist(Playlist):
     ''' read top 50 bluegrass songs from RMS rootsmusicreport.com '''
 
+    # weekly by date
+    #     'https://www.rootsmusicreport.com/charts/print_chart/song/genre/bluegrass/weekly/2022-08-27'
+    # subgenre
+    #      https://www.rootsmusicreport.com/charts/print_chart/song/sub_genre/contemporary-bluegrass/weekly/2022-09-03/2022-09-03
+    # yearly
+    #      https://www.rootsmusicreport.com/charts/print_chart/song/genre/bluegrass/yearly/2021
     URL = 'https://www.rootsmusicreport.com/charts/print_chart/song/genre/bluegrass/weekly'
     CSV_FILE = 'data/rms_playlist.csv'
 
@@ -75,6 +83,11 @@ class RmsPlaylist(Playlist):
 
     def __init__(self):
         Playlist.__init__(self)
+
+    def __init__(self, url, file):
+        self.URL = url
+        self.CSV_FILE = file
+        super().__init__()
 
 
 class BgtPlaylist(Playlist):
@@ -116,8 +129,11 @@ class BgtPlaylist(Playlist):
 class GooglePlaylist(Playlist):
     ''' google music search playlist '''
     # best bluegrass
-    URL = "https://www.google.com/search?q=best+all+time+bluegrass+songs"
-    FILE = "data/Best Bluegrass.csv"
+    # URL = "https://www.google.com/search?q=best+all+time+bluegrass+songs"
+    # FILE = "data/Best Bluegrass.csv"
+
+    URL = "https://www.google.com/search?q=The+Po%E2%80%99+Ramblin%E2%80%99+songs"
+    FILE = "data/poboys.csv"
 
     # best jam bands
     # URL = "https://www.google.com/search?q=best+jam+band+songs"
@@ -170,35 +186,3 @@ class ApplePlaylist(Playlist):
 
         self._playlist = songs
         return songs
-
-
-# %%
-''' read Google Search'''
-pl = GooglePlaylist()
-df = pl.read()
-
-# %%
-''' read Roots Music Service '''
-pl = RmsPlaylist()
-df = pl.read()
-
-# %%
-''' update rms_playlist.csv with latest from Roots Music Service (weekly) '''
-pl = RmsPlaylist()
-df = pl.read()
-pl.merge()
-pl.write()
-
-# %%
-''' read Bluegrass Today '''
-pl = BgtPlaylist()
-df = pl.read()
-
-# %%
-''' update bgt_playlists.csv with latest from Bluegrass Today (monthly) '''
-pl = BgtPlaylist()
-df = pl.read()
-pl.merge()
-pl.write()
-
-# %%
