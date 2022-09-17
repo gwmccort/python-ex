@@ -60,6 +60,34 @@ def writeCsv(songs):
         writer.writerows(songs)
 
 
+def uploadList(log, ytm, plIds):
+    # create a new playlist via list of id's
+    plid = ytm.create_playlist('ytmapi test', 'test description')
+    log.info(f'plid: {plid}')
+
+# add songs to playlist
+    r = ytm.add_playlist_items(plid, plIds)
+    log.debug(f"add_playlist status: {r['status']}")
+    return plid
+
+
+def getSongIds(log, ytm, songsSearch):
+    # get list of song id's
+    plIds = []
+# skip first
+    for s in songsSearch[1:]:
+        sr = ytm.search(s, filter='songs', limit=1)
+        # log.debug(f'sr len: {len(sr)} sr: {sr}')
+
+        if (len(sr) > 0):
+            sid = sr[0]['videoId']
+        # log.info(f'songId: {sid}')
+            plIds.append(sid)
+# log.debug(f'plIds: {plIds}')
+    log.debug(f'plIds: {plIds}')
+    return plIds
+
+
 def uploadOneTime(log, ytm, plIds):
     ''' add song one at a time '''
 
@@ -69,7 +97,28 @@ def uploadOneTime(log, ytm, plIds):
         r = ytm.add_playlist_items(plid, videoIds=[z])
         print(f'r: {r}')
 
-    # config log
+
+################## main ##################################
+log = configLogging()
+log.info('START >>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+ytm = YTMusic('headers_auth.json')
+songs = readSongs(IN_CSV, log)
+# writeCsv(songs)
+
+# combine title & artist
+songsSearch = []
+for i in songs[1:]:
+    songsSearch.append(' - '.join(i))
+# log.debug(f'songsSearch: {songsSearch}')
+
+plIds = getSongIds(log, ytm, songsSearch)
+# uploadOneTime(log, ytm, plIds)
+plid = uploadList(log, ytm, plIds)
+
+log.info('Done:')
+quit()
+
+# config log
 # logging.basicConfig(
 #     level=logging.DEBUG,
 #     format='%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
@@ -95,8 +144,8 @@ def uploadOneTime(log, ytm, plIds):
 # log = logging.getLogger('ytm')
 
 # write logging cfg tree
-    # with open('after-cfg.txt', 'a') as fp:
-    #     fp.write(logging_tree.format.build_description())
+# with open('after-cfg.txt', 'a') as fp:
+#     fp.write(logging_tree.format.build_description())
 # printout()
 # print('--------------------------------')
 
@@ -125,53 +174,6 @@ def uploadOneTime(log, ytm, plIds):
 #     log.addHandler(stream_handler)
 
 ###################################
-    # configLog()
-
-
-log = configLogging()
-log.info('START >>>>>>>>>>>>>>>>>>>>>>>>>>>>')
-ytm = YTMusic('headers_auth.json')
-
-
-songs = readSongs(IN_CSV, log)
-
-# writeCsv(songs)
-
-# combine title & artist
-songsSearch = []
-for i in songs[1:]:
-    songsSearch.append(' - '.join(i))
-log.debug(f'songsSearch: {songsSearch}')
-
-# get list of song id's
-plIds = []
-# skip first
-for s in songsSearch[1:]:
-    log.debug('in get list of song ids')
-    sr = ytm.search(s, filter='songs', limit=1)
-    # log.debug(f'sr len: {len(sr)} sr: {sr}')
-
-    if (len(sr) > 0):
-        sid = sr[0]['videoId']
-        # log.info(f'songId: {sid}')
-        plIds.append(sid)
-# log.debug(f'plIds: {plIds}')
-log.debug(f'plIds: {plIds}')
-
-
-# uploadOneTime(log, ytm, plIds)
-
-# create a new playlist via list of id's
-plid = ytm.create_playlist('ytmapi test', 'test description')
-log.info(f'plid: {plid}')
-
-# add songs to playlist
-r = ytm.add_playlist_items(plid, plIds)
-log.debug(f"add_playlist status: {r['status']}")
-
-
-log.info('Done:')
-quit()
 
 
 # %%
