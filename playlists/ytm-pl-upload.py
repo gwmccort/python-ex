@@ -14,7 +14,62 @@ IN_CSV = 'data/delete-me.csv'
 # IN_CSV = 'data/rms_playlist.csv'
 # IN_CSV = 'data/big-rms-bluegrass.csv'
 
-# config log
+
+def configLogging():
+    log = logging.getLogger(__name__)
+    log.setLevel(logging.DEBUG)
+
+    # console log
+    ch = logging.StreamHandler()
+    ch.setLevel(logging.INFO)
+    formatter = logging.Formatter(
+        '%(levelname)-8s %(message)s')
+    ch.setFormatter(formatter)
+
+    # file log
+    fh = logging.FileHandler('ytm.log')
+    fh.setLevel(logging.DEBUG)
+# formatter = logging.Formatter(
+#     # '%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d %(message)s')
+#     '%(levelname)-8s %(message)s')
+    fh.setFormatter(formatter)
+
+    log.addHandler(ch)
+    log.addHandler(fh)
+    return log
+
+
+def readSongs(IN_CSV, log):
+    # read csv data
+    with open(IN_CSV) as fp:
+        reader = csv.reader(fp)
+        songs = list(reader)
+
+    # TODO: change cvs column order?
+    # swap song & artist columns
+    for song in songs:
+        song[0], song[1] = song[1], song[0]
+    log.debug(f'songs: {songs}')
+    return songs
+
+
+def writeCsv(songs):
+    # write csv data
+    with open('data/x.csv', 'w') as fp:
+        writer = csv.writer(fp)
+        writer.writerows(songs)
+
+
+def uploadOneTime(log, ytm, plIds):
+    ''' add song one at a time '''
+
+    plid = ytm.create_playlist('ytmapi test', 'test description')
+    log.info(f'plid: {plid}')
+    for z in plIds:
+        r = ytm.add_playlist_items(plid, videoIds=[z])
+        print(f'r: {r}')
+
+    # config log
 # logging.basicConfig(
 #     level=logging.DEBUG,
 #     format='%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
@@ -23,8 +78,8 @@ IN_CSV = 'data/delete-me.csv'
 # logging.basicConfig()
 
 # print logging tree
-with open('no-cfg.txt', 'a') as fp:
-    fp.write(logging_tree.format.build_description())
+# with open('no-cfg.txt', 'a') as fp:
+#     fp.write(logging_tree.format.build_description())
 # printout()
 
 # logging.basicConfig(
@@ -36,33 +91,12 @@ with open('no-cfg.txt', 'a') as fp:
 
 # printout()
 # print('--------------------------------')
-
 # log = logging.getLogger()
 # log = logging.getLogger('ytm')
-log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
-
-# console log
-ch = logging.StreamHandler()
-ch.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(levelname)-8s %(message)s')
-ch.setFormatter(formatter)
-
-# file log
-fh = logging.FileHandler('ytm.log')
-fh.setLevel(logging.DEBUG)
-# formatter = logging.Formatter(
-#     # '%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)d %(message)s')
-#     '%(levelname)-8s %(message)s')
-fh.setFormatter(formatter)
-
-log.addHandler(ch)
-log.addHandler(fh)
 
 # write logging cfg tree
-with open('after-cfg.txt', 'a') as fp:
-    fp.write(logging_tree.format.build_description())
+    # with open('after-cfg.txt', 'a') as fp:
+    #     fp.write(logging_tree.format.build_description())
 # printout()
 # print('--------------------------------')
 
@@ -91,56 +125,41 @@ with open('after-cfg.txt', 'a') as fp:
 #     log.addHandler(stream_handler)
 
 ###################################
-# configLog()
+    # configLog()
+
+
+log = configLogging()
 log.info('START >>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 ytm = YTMusic('headers_auth.json')
 
-# read csv data
-with open(IN_CSV) as fp:
-    reader = csv.reader(fp)
-    songs = list(reader)
 
-# swap song & artist columns
-for song in songs:
-    song[0], song[1] = song[1], song[0]
-log.debug(f'data; {songs}')
+songs = readSongs(IN_CSV, log)
 
-# # write csv data
-# with open('data/x.csv', 'w') as fp:
-#     writer = csv.writer(fp)
-#     writer.writerows(songs)
+# writeCsv(songs)
 
 # combine title & artist
-songs = []
-for i in songs:
-    songs.append(' - '.join(i))
-log.debug(songs)
-
-
-log.warning('END: quitting @ #88')
-quit()
-
+songsSearch = []
+for i in songs[1:]:
+    songsSearch.append(' - '.join(i))
+log.debug(f'songsSearch: {songsSearch}')
 
 # get list of song id's
 plIds = []
 # skip first
-for s in songs[1:]:
+for s in songsSearch[1:]:
+    log.debug('in get list of song ids')
     sr = ytm.search(s, filter='songs', limit=1)
-    log.debug(f'sr len: {len(sr)} sr: {sr}')
+    # log.debug(f'sr len: {len(sr)} sr: {sr}')
 
     if (len(sr) > 0):
         sid = sr[0]['videoId']
         # log.info(f'songId: {sid}')
         plIds.append(sid)
-log.debug(plIds)
+# log.debug(f'plIds: {plIds}')
+log.debug(f'plIds: {plIds}')
 
 
-# add song one at a time
-# plid = ytm.create_playlist('ytmapi test', 'test description')
-# log.info(f'plid: {plid}')
-# for z in plIds:
-#     r = ytm.add_playlist_items(plid, videoIds=[z])
-#     print(f'r: {r}')
+# uploadOneTime(log, ytm, plIds)
 
 # create a new playlist via list of id's
 plid = ytm.create_playlist('ytmapi test', 'test description')
@@ -148,8 +167,8 @@ log.info(f'plid: {plid}')
 
 # add songs to playlist
 r = ytm.add_playlist_items(plid, plIds)
-log.warning(f"status: {r['status']}")
-log.info(f'r: {r}')
+log.debug(f"add_playlist status: {r['status']}")
+
 
 log.info('Done:')
 quit()

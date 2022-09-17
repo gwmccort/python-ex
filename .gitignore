@@ -2,7 +2,10 @@
 **/Ex_Files*/**
 *.zip
 .ipynb*/**
+/**/__pycache__
+*.log
 x.*py*
 **/my-directory-list.txt
 pandas/x.ipynb
 playlists/headers_auth.json
+playlists/*.txt

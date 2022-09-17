@@ -1,10 +1,35 @@
+''' test of ytmusicapi '''
 # %%
+import logging as log
+import pprint
 from ytmusicapi import YTMusic
 
+log.basicConfig(level=log.INFO)
+log.info('Starting>>>>>>>>>>>>')
 ytm = YTMusic('headers_auth.json')
 
+# pp = pprint.PrettyPrinter()
+# pp.pprint(ytm)
+
+r = ytm.search('x', filter='songs')
+r
+
+# %%
+''' search for song '''
+results = ytm.search('old and in way - wild horses',
+                     filter='songs')
+# print(pp.pprint(results))
+
+# print first results
+print('title:', results[0]['title'])
+print('id:', results[0]['videoId'])
+print('artist:', results[0]['artists'][0]['name'])
+
+# %%
+
+
 # api.search('test')
-sr = api.search_songs('wild horses - grateful dead')
+# sr = ytm.search_songs('wild horses - grateful dead')
 # print(type(sr))
 # print(sr)
 # for s in sr['items']:
