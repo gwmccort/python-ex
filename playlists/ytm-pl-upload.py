@@ -116,11 +116,12 @@ songs = readSongs(IN_CSV, log)
 log.info(f"#songs: {len(songs)}")
 # writeCsv(songs)
 
-# combine title & artist
+# combine title & artist, skip first line
 songsSearch = []
 for i in songs[1:]:
     songsSearch.append(' - '.join(i))
 # log.debug(f'songsSearch: {songsSearch}')
+log.info(f"search time: {time.time()-start_time}")
 
 # save search data
 with open('data/songsSearch.txt', 'w') as fp:
@@ -128,6 +129,7 @@ with open('data/songsSearch.txt', 'w') as fp:
     fp.write('\n'.join(songsSearch))
 
 plIds = getSongIds(log, ytm, songsSearch)
+log.info(f"song id's time: {time.time()-start_time}")
 
 # save plIds
 with open('data/plIds.txt', 'w') as fp:
@@ -137,12 +139,12 @@ with open('data/plIds.txt', 'w') as fp:
 plIds = list(set(plIds))
 
 
-log.info(f"Done execution time: {time.time() - start_time}")
-quit()
-
 # uploadOneTime(log, ytm, plIds)
 plid = uploadList(log, ytm, plIds)
 
+# END PROGRAM
+log.info(f"Done execution time: {time.time()-start_time}")
+quit()
 
 # %%
 ''' add a song to pl '''

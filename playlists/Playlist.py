@@ -4,9 +4,12 @@
 # %%
 # import re
 
-import pandas as pd
+import logging
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
+
+log = logging.getLogger(__name__)
 
 
 class Playlist:
@@ -14,19 +17,6 @@ class Playlist:
 
     URL = None
     CSV_FILE = None
-
-    def __init__(self):
-        self._playlist = None
-
-    @property
-    def playlist(self):
-        '''playlist getter'''
-        return self._playlist
-
-    @playlist.setter
-    def playlist(self, dataframe):
-        print('Setting playlist')
-        self._playlist = dataframe
 
     def read(self):
         print('Playlist.read')
@@ -43,6 +33,24 @@ class Playlist:
 
         self._playlist = df
         return df
+
+    def ytmUpload(self):
+        # log.warning('ytmUpload')
+        print('ytmUpload()')
+        pass
+
+    def __init__(self):
+        self._playlist = None
+
+    @property
+    def playlist(self):
+        '''playlist getter'''
+        return self._playlist
+
+    @playlist.setter
+    def playlist(self, dataframe):
+        print('Setting playlist')
+        self._playlist = dataframe
 
 
 class RmsPlaylist(Playlist):
@@ -186,3 +194,5 @@ class ApplePlaylist(Playlist):
 
         self._playlist = songs
         return songs
+
+# %%
