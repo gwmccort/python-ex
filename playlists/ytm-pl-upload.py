@@ -1,6 +1,7 @@
 ''' upload playlist to ytm '''
 
 import logging
+import time
 import sys
 import csv
 from ytmusicapi import YTMusic
@@ -8,11 +9,13 @@ from ytmusicapi import YTMusic
 import logging_tree
 from logging_tree import printout
 
+start_time = time.time()
+
 # IN_CSV = 'data/bgt_playlist.csv' # works
-IN_CSV = 'data/delete-me.csv'
-# 130+ songs fail
+# IN_CSV = 'data/delete-me.csv' #25
+# 130+ songs fail due to duplicate id's
 # IN_CSV = 'data/rms_playlist.csv'
-# IN_CSV = 'data/big-rms-bluegrass.csv'
+IN_CSV = 'data/big-rms-bluegrass.csv'
 
 
 def configLogging():
@@ -60,17 +63,6 @@ def writeCsv(songs):
         writer.writerows(songs)
 
 
-def uploadList(log, ytm, plIds):
-    # create a new playlist via list of id's
-    plid = ytm.create_playlist('ytmapi test', 'test description')
-    log.info(f'plid: {plid}')
-
-# add songs to playlist
-    r = ytm.add_playlist_items(plid, plIds)
-    log.debug(f"add_playlist status: {r['status']}")
-    return plid
-
-
 def getSongIds(log, ytm, songsSearch):
     # get list of song id's
     plIds = []
@@ -81,21 +73,39 @@ def getSongIds(log, ytm, songsSearch):
 
         if (len(sr) > 0):
             sid = sr[0]['videoId']
-        # log.info(f'songId: {sid}')
-            plIds.append(sid)
-# log.debug(f'plIds: {plIds}')
+            # log.info(f'songId: {sid}')
+
+            # check if duplicate
+            if (sid in plIds):
+                log.warning(f"Duplicate id: {sid}:{s}")
+            else:
+                plIds.append(sid)
     log.debug(f'plIds: {plIds}')
     return plIds
+
+
+def uploadList(log, ytm, plIds):
+    # create a new playlist via list of id's
+    plid = ytm.create_playlist('ytmapi test', 'test description')
+    log.debug(f'plid: {plid}')
+
+# add songs to playlist
+    r = ytm.add_playlist_items(plid, plIds)
+    log.info(f"add_playlist status: {r['status']}")
+    log.debug(f"add_playlist results: {r}")
+    return plid
 
 
 def uploadOneTime(log, ytm, plIds):
     ''' add song one at a time '''
 
     plid = ytm.create_playlist('ytmapi test', 'test description')
-    log.info(f'plid: {plid}')
+    log.debug(f'plid: {plid}')
     for z in plIds:
         r = ytm.add_playlist_items(plid, videoIds=[z])
-        print(f'r: {r}')
+        if (r['status'] != 'STATUS_SUCCEEDED'):
+            log.info(f"add_playlist status: {r['status']}")
+            log.debug(f"add_playlist results: {r}")
 
 
 ################## main ##################################
@@ -103,6 +113,7 @@ log = configLogging()
 log.info('START >>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 ytm = YTMusic('headers_auth.json')
 songs = readSongs(IN_CSV, log)
+log.info(f"#songs: {len(songs)}")
 # writeCsv(songs)
 
 # combine title & artist
@@ -111,12 +122,57 @@ for i in songs[1:]:
     songsSearch.append(' - '.join(i))
 # log.debug(f'songsSearch: {songsSearch}')
 
+# save search data
+with open('data/songsSearch.txt', 'w') as fp:
+    # fp.write(str(songsSearch))
+    fp.write('\n'.join(songsSearch))
+
 plIds = getSongIds(log, ytm, songsSearch)
+
+# save plIds
+with open('data/plIds.txt', 'w') as fp:
+    fp.write('\n'.join(plIds))
+
+# make id's unique
+plIds = list(set(plIds))
+
+
+log.info(f"Done execution time: {time.time() - start_time}")
+quit()
+
 # uploadOneTime(log, ytm, plIds)
 plid = uploadList(log, ytm, plIds)
 
-log.info('Done:')
-quit()
+
+# %%
+''' add a song to pl '''
+sr = ytm.search('billy strings - red dazy')
+ytm.add_playlist_items(plid, [sr[0]['videoId']])
+for song in songs:
+    sr = ytm.search(song, filter='songs')
+    sid = sr[0]['videoId']
+    log.info(f'song: {song} songId: {sid}')
+    plIds.append(sid)
+
+ytm.add_playlist_items(plid, plIds)
+
+
+# %%
+''' add list of songs '''
+songs = [
+    "I Ain't Dead Yet",
+    'Old Number Seven',
+    'Old and in the way',
+    'watch it fall, billy strings']
+plIds = []
+
+for s in songs:
+    sr = ytm.search(s, filter='songs')
+    sid = sr[0]['videoId']
+    log.info(f'songId: {sid}')
+    plIds.append(sid)
+
+ytm.add_playlist_items(plid, plIds)
 
 # config log
 # logging.basicConfig(
@@ -174,37 +230,3 @@ quit()
 #     log.addHandler(stream_handler)
 
 ###################################
-
-
-# %%
-''' add a song to pl '''
-sr = ytm.search('billy strings - red dazy')
-ytm.add_playlist_items(plid, [sr[0]['videoId']])
-for song in songs:
-    sr = ytm.search(song, filter='songs')
-    sid = sr[0]['videoId']
-    log.info(f'song: {song} songId: {sid}')
-    plIds.append(sid)
-
-ytm.add_playlist_items(plid, plIds)
-
-
-# %%
-''' add list of songs '''
-songs = [
-    "I Ain't Dead Yet",
-    'Old Number Seven',
-    'Old and in the way',
-    'watch it fall, billy strings']
-plIds = []
-
-for s in songs:
-    sr = ytm.search(s, filter='songs')
-    sid = sr[0]['videoId']
-    log.info(f'songId: {sid}')
-    plIds.append(sid)
-
-ytm.add_playlist_items(plid, plIds)
-
-
-# %%

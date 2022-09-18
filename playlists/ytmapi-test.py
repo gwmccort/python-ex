@@ -4,9 +4,13 @@ import logging as log
 import pprint
 from ytmusicapi import YTMusic
 
+ytm = YTMusic('headers_auth.json')
+
+
+# %%
+
 log.basicConfig(level=log.INFO)
 log.info('Starting>>>>>>>>>>>>')
-ytm = YTMusic('headers_auth.json')
 
 # pp = pprint.PrettyPrinter()
 # pp.pprint(ytm)
