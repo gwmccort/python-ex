@@ -19,6 +19,7 @@ class Playlist:
 
     URL = None
     CSV_FILE = None
+    log = logging.getLogger(__name__ + 'Playlist')
 
     def read(self):
         print('Playlist.read')
@@ -37,11 +38,56 @@ class Playlist:
         return df
 
     def ytmUpload(self):
-        # log.warning('ytmUpload')
-        ytm = YTMusic('header_auth.json')
+        # TODO: check if self.playlist is valid
+        # if (self.playlist == None):
+        #     log.error('No playlist, need to read it in')
+        #     raise ValueError('No playlist, need to read it in')
+        # else:
+        ytm = YTMusic('headers_auth.json')
 
-        print('ytmUpload()')
-        return ytm
+        # create song search list "artist - song"
+        song_search = []
+        for i in self.playlist.index:
+            # print(self.playlist['Song'][i])
+            song_search.append(
+                self.playlist['Artist'][i]
+                + ' - '
+                + self.playlist['Song'][i]
+            )
+        log.debug(f"song_search: {song_search}")
+
+       # get ytm song id's from song_search
+        songIds = []
+        for song in song_search:
+            log.info(f"searching for song: {song}")
+            try:
+                sr = ytm.search(song, filter='songs')
+                log.debug(f"search for song: {song} results: {sr}")
+            except Exception:
+                log.warning(
+                    f"Exception doing song search, skipping song: {song}")
+                pass  # skip excpetion
+            if (len(sr) == 0):
+                log.warning(f"sr for song: {song} has no results")
+            else:
+                sId = sr[0]['videoId']
+                log.debug(f"song id: {sId}")
+
+                # check if duplicates}
+                if (sId in songIds):
+                    log.warning(f"Duplicate id: {sId}:{s}")
+                else:
+                    songIds.append(sId)
+        log.debug(f"songIds: {songIds}")
+
+        # create new playlist & populate w/ songIds
+        try:
+            plid = ytm.create_playlist('ytmapi test',
+                                       'test description')
+            r = ytm.add_playlist_items(plid, songIds)
+            log.info(f"add_playlist status: {r['status']}")
+        except Exception:
+            log.error("Couldn't create playlist results: {r}")
 
     def __init__(self):
         self._playlist = None
@@ -53,7 +99,7 @@ class Playlist:
 
     @playlist.setter
     def playlist(self, dataframe):
-        print('Setting playlist')
+        log.debug('Setting playlist')
         self._playlist = dataframe
 
 
@@ -93,13 +139,13 @@ class RmsPlaylist(Playlist):
         self._playlist = df
         return df
 
-    def __init__(self):
-        Playlist.__init__(self)
+    # def __init__(self):
+    #     Playlist.__init__(self)
 
-    def __init__(self, url, file):
-        self.URL = url
-        self.CSV_FILE = file
-        super().__init__()
+    # def __init__(self, url, file):
+    #     self.URL = url
+    #     self.CSV_FILE = file
+    #     super().__init__()
 
 
 class BgtPlaylist(Playlist):
@@ -198,10 +244,3 @@ class ApplePlaylist(Playlist):
 
         self._playlist = songs
         return songs
-
-
-# %%
-ytm = YTMusic('headers_auth.json')
-ytm
-
-# %%

@@ -4,7 +4,7 @@
 from datetime import datetime
 from datetime import timedelta
 
-import Playlist
+import playlists.playlist as playlist
 
 start_date = datetime.strptime('2022-08-27', "%Y-%m-%d")
 print(start_date)
@@ -21,7 +21,7 @@ for i in range(100):
 
     date = date - timedelta(weeks=1)
     date_string = date.strftime('%Y-%m-%d')
-    pl = Playlist.RmsPlaylist(url+date_string,
+    pl = playlist.RmsPlaylist(url+date_string,
                               file_name)
     pl.read()
     pl.merge()

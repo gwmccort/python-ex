@@ -1,6 +1,6 @@
 ''' update playlist csv files '''
 
-import Playlist
+import playlists.playlist as playlist
 import argparse
 
 
@@ -27,15 +27,15 @@ def main():
     args = parse_args()
 
     if (args.all):
-        for pl in [Playlist.RmsPlaylist(), Playlist.BgtPlaylist()]:
+        for pl in [playlist.RmsPlaylist(), playlist.BgtPlaylist()]:
             pl.read()
             pl.merge()
             pl.write()
     else:
         if (args.rms):
-            pl = Playlist.RmsPlaylist()
+            pl = playlist.RmsPlaylist()
         elif (args.bgt):
-            pl = Playlist.BgtPlaylist()
+            pl = playlist.BgtPlaylist()
         pl.read()
         pl.merge()
         pl.write()
