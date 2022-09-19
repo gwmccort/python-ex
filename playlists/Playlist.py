@@ -8,6 +8,8 @@ import logging
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from ytmusicapi import YTMusic
+
 
 log = logging.getLogger(__name__)
 
@@ -36,8 +38,10 @@ class Playlist:
 
     def ytmUpload(self):
         # log.warning('ytmUpload')
+        ytm = YTMusic('header_auth.json')
+
         print('ytmUpload()')
-        pass
+        return ytm
 
     def __init__(self):
         self._playlist = None
@@ -194,5 +198,10 @@ class ApplePlaylist(Playlist):
 
         self._playlist = songs
         return songs
+
+
+# %%
+ytm = YTMusic('headers_auth.json')
+ytm
 
 # %%
